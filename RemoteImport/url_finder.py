@@ -8,10 +8,19 @@ class URLFinder(PathEntryFinder):
         self.available = available
         
     def find_spec(self, name, target=None):
-        if name in self.available:
-            origin = "{}/{}.py".format(self.url, name)
-            loader = URLLoader()
-            return spec_from_loader(name, loader, origin=origin)
+        for avail in self.available:
+            is_package = avail.endswith('/')
+            path_segments = name.replace('.', '/')
+            
+            if path_segments == avail.rstrip('/'):
+                if is_package:
+                    origin = "{}/{}/__init__.py".format(self.url, path_segments)
+                else:
+                    origin = "{}/{}.py".format(self.url, path_segments)
+                
+                spec = spec_from_loader(name, URLLoader(), origin=origin, is_package=is_package)
+                if is_package:
+                    spec.submodule_search_locations = [f"{self.url}/"]
+                return spec
         
-        else:
-            return None
+        return None
