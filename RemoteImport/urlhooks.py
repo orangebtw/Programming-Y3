@@ -29,9 +29,21 @@ def url_hook(some_str):
     if not some_str.startswith(("http", "https")):
         raise ImportError
     
-    try:
-        response = requests.get(some_str)
-    except requests.ConnectionError:
+
+    timeout = 2
+    success = False
+    for _ in range(5):
+        try:
+            response = requests.get(some_str, timeout=timeout)
+            response.raise_for_status()
+            success = True
+            break
+        except:
+            pass
+        
+        timeout *= 1.5
+    
+    if not success:
         return URLFinder(some_str, {})
     
     parsed = urlparse(some_str)
