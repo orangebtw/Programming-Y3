@@ -2,7 +2,7 @@ from url_finder import URLFinder
 import re
 import sys
 import requests
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urljoin, urlparse, urlsplit
 
 def find_all_files(content: str, base_url: str, paths: list, parent: str | None):
     filenames = re.findall(r"<li><a\s+href=\".*\">([a-zA-Z_][a-zA-Z0-9_]*(?:.py|/))<\/a><\/li>", content)
@@ -34,11 +34,13 @@ def url_hook(some_str):
     except requests.ConnectionError:
         return URLFinder(some_str, {})
     
+    parsed = urlparse(some_str)
+    
     paths = []
-    find_all_files(response.text, some_str, paths, None)
+    parent = parsed.path.lstrip('/') if parsed.path else None
+    find_all_files(response.text, some_str, paths, parent)
     
     return URLFinder(some_str, paths)
 
 
 sys.path_hooks.append(url_hook)
-print(sys.path_hooks)
