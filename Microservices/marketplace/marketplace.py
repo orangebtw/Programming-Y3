@@ -20,6 +20,11 @@ CATEGORIES = {
     "science_fiction": BookCategory.BOOK_CATEGORY_SCIENCE_FICTION,
     "self_help": BookCategory.BOOK_CATEGORY_SELF_HELP,
 }
+CATEGORY_NAMES = {
+    "mystery": "Mistery",
+    "science_fiction": "Science Fiction",
+    "self_help": "Self Help"
+}
 
 
 class BookOut(BaseModel):
@@ -43,7 +48,7 @@ async def fetch_recommendations(
     stub: RecommendationsStub, user_id: int, category: CategoryName, max_results: int
 ) -> list[BookOut]:
     request = RecommendationRequest(
-        user_id=user_id, category=CATEGORIES[category], max_results=max_results
+        user_id=user_id, category=CATEGORIES.get(category), max_results=max_results
     )
     try:
         response = await stub.Recommend(request, timeout=2.0)
@@ -68,9 +73,9 @@ async def get_recommendations(
 
 
 @app.get("/", response_class=HTMLResponse, include_in_schema=False)
-async def homepage(request: Request) -> str:
+async def homepage(request: Request, category: str = "mystery") -> str:
     books = await fetch_recommendations(
-        request.app.state.recommendations, user_id=1, category="mystery", max_results=3
+        request.app.state.recommendations, user_id=1, category=category, max_results=3
     )
     items = "\n".join(f"      <li>{html.escape(book.title)}</li>" for book in books)
     return f"""<!doctype html>
@@ -80,7 +85,7 @@ async def homepage(request: Request) -> str:
     <title>Online Books For You</title>
   </head>
   <body>
-    <h1>Mystery books you may like</h1>
+    <h1>{CATEGORY_NAMES.get(category)} books you may like</h1>
     <ul>
 {items}
     </ul>
