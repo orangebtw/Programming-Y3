@@ -9,7 +9,7 @@
 ### Выполенные задания
 1. Добавьте в Greeter метод SayGoodbye с собственными сообщениями запроса и ответа. Перегенерируйте код, реализуйте метод и вызовите его из клиента.
 
-**✅ Выполнено в коммите 7d4aa093ff28762c78f5a37722d598a6f201f028 .**
+**✅ Выполнено в коммите [7d4aa09](/../../commit/7d4aa093ff28762c78f5a37722d598a6f201f028).**
 ```diff
 --- a/RPC/Protobuf/greeter_client.py
 +++ b/RPC/Protobuf/greeter_client.py
@@ -110,7 +110,7 @@ python -m uvicorn marketplace:app --port 8000
 ### Выполенные задания
 1. Добавьте в Marketplace параметр category для главной страницы.
 
-**✅ Выполнено в коммите 63f7bbd3b1bb523482f48b765b7345abea13980a .**
+**✅ Выполнено в коммите [63f7bbd](/../../commit/63f7bbd3b1bb523482f48b765b7345abea13980a).**
 ```diff
 --- a/Microservices/marketplace/marketplace.py
 +++ b/Microservices/marketplace/marketplace.py
@@ -159,7 +159,7 @@ python -m uvicorn marketplace:app --port 8000
 ```
 2. Добавьте тест, проверяющий ответ 400 при ошибке INVALID_ARGUMENT от Recommendations.
 
-**✅ Выполнено в коммите 0ab977a3d25611d83c25c4eb36720d3f0bb110ae .**
+**✅ Выполнено в коммите [0ab977a](/../../commit/0ab977a3d25611d83c25c4eb36720d3f0bb110ae).**
 ```diff
 --- a/Microservices/marketplace/test_marketplace_integration.py
 +++ b/Microservices/marketplace/test_marketplace_integration.py
@@ -188,7 +188,7 @@ python -m uvicorn marketplace:app --port 8000
 ```
 3. Добавьте в RecommendationRequest поле repeated int32 exclude_ids = 4;, чтобы не рекомендовать уже прочитанные книги. Проверьте, что старый Marketplace (без перегенерации кода) продолжает работать с новым Recommendations.
 
-**✅ Выполнено в коммите 905b4b29dd244ba3f3e7d317f49ea0f1b9cc4cd7 .**
+**✅ Выполнено в коммите [905b4b2](/../../commit/905b4b29dd244ba3f3e7d317f49ea0f1b9cc4cd7).**
 ```diff
 --- a/RPC/Microservices/marketplace/marketplace.py
 +++ b/RPC/Microservices/marketplace/marketplace.py
