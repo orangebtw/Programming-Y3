@@ -25,7 +25,7 @@ _sym_db = _symbol_database.Default()
 from library.v1 import library_pb2 as library_dot_v1_dot_library__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n library/v1/library_service.proto\x12\nlibrary.v1\x1a\x18library/v1/library.proto\"\x1c\n\x0eGetBookRequest\x12\n\n\x02id\x18\x01 \x01(\x03\"4\n\x10ListBooksRequest\x12 \n\x05genre\x18\x01 \x01(\x0e\x32\x11.library.v1.Genre\"*\n\x12\x42uildReportRequest\x12\x14\n\x0cwork_seconds\x18\x01 \x01(\x01\"\x90\x01\n\x06Report\x12\x13\n\x0btotal_books\x18\x01 \x01(\x05\x12<\n\x0e\x62ooks_by_genre\x18\x02 \x03(\x0b\x32$.library.v1.Report.BooksByGenreEntry\x1a\x33\n\x11\x42ooksByGenreEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\x05:\x02\x38\x01\x32\xcb\x01\n\x0eLibraryService\x12\x37\n\x07GetBook\x12\x1a.library.v1.GetBookRequest\x1a\x10.library.v1.Book\x12=\n\tListBooks\x12\x1c.library.v1.ListBooksRequest\x1a\x10.library.v1.Book0\x01\x12\x41\n\x0b\x42uildReport\x12\x1e.library.v1.BuildReportRequest\x1a\x12.library.v1.Reportb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n library/v1/library_service.proto\x12\nlibrary.v1\x1a\x18library/v1/library.proto\"\x1c\n\x0eGetBookRequest\x12\n\n\x02id\x18\x01 \x01(\x03\"4\n\x10ListBooksRequest\x12 \n\x05genre\x18\x01 \x01(\x0e\x32\x11.library.v1.Genre\"*\n\x12\x42uildReportRequest\x12\x14\n\x0cwork_seconds\x18\x01 \x01(\x01\"\x90\x01\n\x06Report\x12\x13\n\x0btotal_books\x18\x01 \x01(\x05\x12<\n\x0e\x62ooks_by_genre\x18\x02 \x03(\x0b\x32$.library.v1.Report.BooksByGenreEntry\x1a\x33\n\x11\x42ooksByGenreEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\x05:\x02\x38\x01\x32\xff\x01\n\x0eLibraryService\x12\x37\n\x07GetBook\x12\x1a.library.v1.GetBookRequest\x1a\x10.library.v1.Book\x12=\n\tListBooks\x12\x1c.library.v1.ListBooksRequest\x1a\x10.library.v1.Book0\x01\x12\x41\n\x0b\x42uildReport\x12\x1e.library.v1.BuildReportRequest\x1a\x12.library.v1.Report\x12\x32\n\x08\x41\x64\x64\x42ooks\x12\x10.library.v1.Book\x1a\x12.library.v1.Report(\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -45,5 +45,5 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_REPORT_BOOKSBYGENREENTRY']._serialized_start=296
   _globals['_REPORT_BOOKSBYGENREENTRY']._serialized_end=347
   _globals['_LIBRARYSERVICE']._serialized_start=350
-  _globals['_LIBRARYSERVICE']._serialized_end=553
+  _globals['_LIBRARYSERVICE']._serialized_end=605
 # @@protoc_insertion_point(module_scope)

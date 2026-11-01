@@ -11,6 +11,8 @@ service LibraryService {
   rpc ListBooks (ListBooksRequest) returns (stream Book);
   // Долгая операция, доступная только с токеном
   rpc BuildReport (BuildReportRequest) returns (Report);
+  // Клиентский поток
+  rpc AddBooks (stream Book) returns (Report);
 }
 
 message GetBookRequest {

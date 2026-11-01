@@ -47,3 +47,22 @@ for title, metadata, work_seconds, timeout in scenarios:
     except grpc.RpcError as error:
         result = f"{error.code().name} — {error.details()}"
     print(f"{title:<18} {time.monotonic() - started:4.1f} с  {result}")
+
+# Клиентский поток
+def generate_books():
+    books_to_send = (
+        library_pb2.Book(id=5, title="qwe", authors=(library_pb2.Author(name="Asd", birth_year=2015),)),
+        library_pb2.Book(id=6, title="rwetre", authors=(library_pb2.Author(name="yrty345", birth_year=2020),)),
+        library_pb2.Book(id=7, title="aaaaa", authors=(library_pb2.Author(name="qqqqq", birth_year=2016),)),
+    )
+    for book in books_to_send:
+        time.sleep(0.5)
+        yield book
+
+
+try:
+    report = library_stub.AddBooks(generate_books())
+    result = f"OK: {report.total_books} книги, {dict(report.books_by_genre)}"
+except grpc.RpcError as error:
+    result = f"{error.code().name} — {error.details()}"
+print(result)
