@@ -18,6 +18,8 @@ def run() -> None:
         print("Greeter client received:", response.message)
         response = stub.SayMyName(helloworld_pb2.MyNameRequest(name="Heisenberg"), timeout=5)
         print(response.message)
+        response = stub.SayGoodbye(helloworld_pb2.GoodbyeRequest(name="my friend"), timeout=5)
+        print(response.message)
 
 
 if __name__ == "__main__":

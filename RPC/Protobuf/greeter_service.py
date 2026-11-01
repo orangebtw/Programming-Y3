@@ -18,6 +18,9 @@ class Greeter(helloworld_pb2_grpc.GreeterServicer):
             message=f"— You're {request.name}.\n— You're goddamn right."
         )
 
+    def SayGoodbye(self, request, context):
+        return helloworld_pb2.GoodbyeReply(message=f"Bye bye, {request.name} :(")
+
 
 def serve(port: int = 50051) -> None:
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

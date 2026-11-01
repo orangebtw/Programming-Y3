@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10helloworld.proto\x12\nhelloworld\"\x1c\n\x0cHelloRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x1d\n\nHelloReply\x12\x0f\n\x07message\x18\x01 \x01(\t\"\x1d\n\rMyNameRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x1e\n\x0bMyNameReply\x12\x0f\n\x07message\x18\x01 \x01(\t2\xcb\x01\n\x07Greeter\x12<\n\x08SayHello\x12\x18.helloworld.HelloRequest\x1a\x16.helloworld.HelloReply\x12\x41\n\rSayHelloAgain\x12\x18.helloworld.HelloRequest\x1a\x16.helloworld.HelloReply\x12?\n\tSayMyName\x12\x19.helloworld.MyNameRequest\x1a\x17.helloworld.MyNameReplyb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10helloworld.proto\x12\nhelloworld\"\x1c\n\x0cHelloRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x1d\n\nHelloReply\x12\x0f\n\x07message\x18\x01 \x01(\t\"\x1d\n\rMyNameRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x1e\n\x0bMyNameReply\x12\x0f\n\x07message\x18\x01 \x01(\t\"\x1e\n\x0eGoodbyeRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x1f\n\x0cGoodbyeReply\x12\x0f\n\x07message\x18\x01 \x01(\t2\x8f\x02\n\x07Greeter\x12<\n\x08SayHello\x12\x18.helloworld.HelloRequest\x1a\x16.helloworld.HelloReply\x12\x41\n\rSayHelloAgain\x12\x18.helloworld.HelloRequest\x1a\x16.helloworld.HelloReply\x12?\n\tSayMyName\x12\x19.helloworld.MyNameRequest\x1a\x17.helloworld.MyNameReply\x12\x42\n\nSayGoodbye\x12\x1a.helloworld.GoodbyeRequest\x1a\x18.helloworld.GoodbyeReplyb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -39,6 +39,10 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_MYNAMEREQUEST']._serialized_end=122
   _globals['_MYNAMEREPLY']._serialized_start=124
   _globals['_MYNAMEREPLY']._serialized_end=154
-  _globals['_GREETER']._serialized_start=157
-  _globals['_GREETER']._serialized_end=360
+  _globals['_GOODBYEREQUEST']._serialized_start=156
+  _globals['_GOODBYEREQUEST']._serialized_end=186
+  _globals['_GOODBYEREPLY']._serialized_start=188
+  _globals['_GOODBYEREPLY']._serialized_end=219
+  _globals['_GREETER']._serialized_start=222
+  _globals['_GREETER']._serialized_end=493
 # @@protoc_insertion_point(module_scope)

@@ -50,6 +50,11 @@ class GreeterStub:
                 request_serializer=helloworld__pb2.MyNameRequest.SerializeToString,
                 response_deserializer=helloworld__pb2.MyNameReply.FromString,
                 _registered_method=True)
+        self.SayGoodbye = channel.unary_unary(
+                '/helloworld.Greeter/SayGoodbye',
+                request_serializer=helloworld__pb2.GoodbyeRequest.SerializeToString,
+                response_deserializer=helloworld__pb2.GoodbyeReply.FromString,
+                _registered_method=True)
 
 
 class GreeterServicer:
@@ -74,6 +79,12 @@ class GreeterServicer:
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def SayGoodbye(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_GreeterServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -91,6 +102,11 @@ def add_GreeterServicer_to_server(servicer, server):
                     servicer.SayMyName,
                     request_deserializer=helloworld__pb2.MyNameRequest.FromString,
                     response_serializer=helloworld__pb2.MyNameReply.SerializeToString,
+            ),
+            'SayGoodbye': grpc.unary_unary_rpc_method_handler(
+                    servicer.SayGoodbye,
+                    request_deserializer=helloworld__pb2.GoodbyeRequest.FromString,
+                    response_serializer=helloworld__pb2.GoodbyeReply.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -175,6 +191,33 @@ class Greeter:
             '/helloworld.Greeter/SayMyName',
             helloworld__pb2.MyNameRequest.SerializeToString,
             helloworld__pb2.MyNameReply.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def SayGoodbye(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/helloworld.Greeter/SayGoodbye',
+            helloworld__pb2.GoodbyeRequest.SerializeToString,
+            helloworld__pb2.GoodbyeReply.FromString,
             options,
             channel_credentials,
             insecure,
