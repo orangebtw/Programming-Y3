@@ -5,7 +5,7 @@ from concurrent import futures
 
 import grpc
 import recommendations_pb2_grpc
-from recommendations_pb2 import BookCategory, BookRecommendation, RecommendationResponse
+from recommendations_pb2 import BookCategory, BookRecommendation, RecommendationRequest, RecommendationResponse
 
 BOOKS_BY_CATEGORY = {
     BookCategory.BOOK_CATEGORY_MYSTERY: [
@@ -29,7 +29,7 @@ BOOKS_BY_CATEGORY = {
 
 
 class RecommendationService(recommendations_pb2_grpc.RecommendationsServicer):
-    def Recommend(self, request, context):
+    def Recommend(self, request: RecommendationRequest, context):
         if request.max_results <= 0:
             context.abort(grpc.StatusCode.INVALID_ARGUMENT, "max_results must be positive")
         if request.category == BookCategory.BOOK_CATEGORY_UNSPECIFIED:
@@ -37,8 +37,11 @@ class RecommendationService(recommendations_pb2_grpc.RecommendationsServicer):
         books = BOOKS_BY_CATEGORY.get(request.category)
         if books is None:
             context.abort(grpc.StatusCode.NOT_FOUND, f"Category {request.category} not found")
+            return
+        books = list(filter(lambda b: b.id not in request.exclude_ids, books))
         num_results = min(request.max_results, len(books))
-        return RecommendationResponse(recommendations=random.sample(books, num_results))
+        recommendations = random.sample(books, num_results)
+        return RecommendationResponse(recommendations=recommendations)
 
 
 def create_server(port: int = 50051) -> tuple[grpc.Server, int]:

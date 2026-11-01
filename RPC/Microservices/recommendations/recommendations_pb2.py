@@ -24,21 +24,21 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15recommendations.proto\x12\x0frecommendations\"n\n\x15RecommendationRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\x05\x12/\n\x08\x63\x61tegory\x18\x02 \x01(\x0e\x32\x1d.recommendations.BookCategory\x12\x13\n\x0bmax_results\x18\x03 \x01(\x05\"/\n\x12\x42ookRecommendation\x12\n\n\x02id\x18\x01 \x01(\x05\x12\r\n\x05title\x18\x02 \x01(\t\"V\n\x16RecommendationResponse\x12<\n\x0frecommendations\x18\x01 \x03(\x0b\x32#.recommendations.BookRecommendation*\x88\x01\n\x0c\x42ookCategory\x12\x1d\n\x19\x42OOK_CATEGORY_UNSPECIFIED\x10\x00\x12\x19\n\x15\x42OOK_CATEGORY_MYSTERY\x10\x01\x12!\n\x1d\x42OOK_CATEGORY_SCIENCE_FICTION\x10\x02\x12\x1b\n\x17\x42OOK_CATEGORY_SELF_HELP\x10\x03\x32o\n\x0fRecommendations\x12\\\n\tRecommend\x12&.recommendations.RecommendationRequest\x1a\'.recommendations.RecommendationResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15recommendations.proto\x12\x0frecommendations\"\x83\x01\n\x15RecommendationRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\x05\x12/\n\x08\x63\x61tegory\x18\x02 \x01(\x0e\x32\x1d.recommendations.BookCategory\x12\x13\n\x0bmax_results\x18\x03 \x01(\x05\x12\x13\n\x0b\x65xclude_ids\x18\x04 \x03(\x05\"/\n\x12\x42ookRecommendation\x12\n\n\x02id\x18\x01 \x01(\x05\x12\r\n\x05title\x18\x02 \x01(\t\"V\n\x16RecommendationResponse\x12<\n\x0frecommendations\x18\x01 \x03(\x0b\x32#.recommendations.BookRecommendation*\x88\x01\n\x0c\x42ookCategory\x12\x1d\n\x19\x42OOK_CATEGORY_UNSPECIFIED\x10\x00\x12\x19\n\x15\x42OOK_CATEGORY_MYSTERY\x10\x01\x12!\n\x1d\x42OOK_CATEGORY_SCIENCE_FICTION\x10\x02\x12\x1b\n\x17\x42OOK_CATEGORY_SELF_HELP\x10\x03\x32o\n\x0fRecommendations\x12\\\n\tRecommend\x12&.recommendations.RecommendationRequest\x1a\'.recommendations.RecommendationResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'recommendations_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_BOOKCATEGORY']._serialized_start=292
-  _globals['_BOOKCATEGORY']._serialized_end=428
-  _globals['_RECOMMENDATIONREQUEST']._serialized_start=42
-  _globals['_RECOMMENDATIONREQUEST']._serialized_end=152
-  _globals['_BOOKRECOMMENDATION']._serialized_start=154
-  _globals['_BOOKRECOMMENDATION']._serialized_end=201
-  _globals['_RECOMMENDATIONRESPONSE']._serialized_start=203
-  _globals['_RECOMMENDATIONRESPONSE']._serialized_end=289
-  _globals['_RECOMMENDATIONS']._serialized_start=430
-  _globals['_RECOMMENDATIONS']._serialized_end=541
+  _globals['_BOOKCATEGORY']._serialized_start=314
+  _globals['_BOOKCATEGORY']._serialized_end=450
+  _globals['_RECOMMENDATIONREQUEST']._serialized_start=43
+  _globals['_RECOMMENDATIONREQUEST']._serialized_end=174
+  _globals['_BOOKRECOMMENDATION']._serialized_start=176
+  _globals['_BOOKRECOMMENDATION']._serialized_end=223
+  _globals['_RECOMMENDATIONRESPONSE']._serialized_start=225
+  _globals['_RECOMMENDATIONRESPONSE']._serialized_end=311
+  _globals['_RECOMMENDATIONS']._serialized_start=452
+  _globals['_RECOMMENDATIONS']._serialized_end=563
 # @@protoc_insertion_point(module_scope)

@@ -45,10 +45,12 @@ app = FastAPI(title="Marketplace", version="1.0.0", lifespan=lifespan)
 
 
 async def fetch_recommendations(
-    stub: RecommendationsStub, user_id: int, category: CategoryName, max_results: int
+    stub: RecommendationsStub, user_id: int, category: CategoryName, max_results: int,
+    exclude_ids: list[int] | None
 ) -> list[BookOut]:
     request = RecommendationRequest(
-        user_id=user_id, category=CATEGORIES.get(category), max_results=max_results
+        user_id=user_id, category=CATEGORIES.get(category), max_results=max_results,
+        exclude_ids=exclude_ids
     )
     try:
         response = await stub.Recommend(request, timeout=2.0)
@@ -65,17 +67,19 @@ async def get_recommendations(
     user_id: int,
     category: CategoryName = "mystery",
     max_results: Annotated[int, Query(ge=1, le=10)] = 3,
+    exclude_id: Annotated[list[int] | None, Query()] = None,
 ) -> list[BookOut]:
     """Рекомендации книг выбранной категории."""
     return await fetch_recommendations(
-        request.app.state.recommendations, user_id, category, max_results
+        request.app.state.recommendations, user_id, category, max_results, exclude_ids=exclude_id
     )
 
 
 @app.get("/", response_class=HTMLResponse, include_in_schema=False)
-async def homepage(request: Request, category: str = "mystery") -> str:
+async def homepage(request: Request, category: str = "mystery", exclude_id: Annotated[list[int] | None, Query()] = None) -> str:
     books = await fetch_recommendations(
-        request.app.state.recommendations, user_id=1, category=category, max_results=3
+        request.app.state.recommendations, user_id=1, category=category, max_results=3,
+        exclude_ids=exclude_id
     )
     items = "\n".join(f"      <li>{html.escape(book.title)}</li>" for book in books)
     return f"""<!doctype html>

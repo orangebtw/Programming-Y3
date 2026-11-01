@@ -19,14 +19,16 @@ BOOK_CATEGORY_SCIENCE_FICTION: BookCategory
 BOOK_CATEGORY_SELF_HELP: BookCategory
 
 class RecommendationRequest(_message.Message):
-    __slots__ = ("user_id", "category", "max_results")
+    __slots__ = ("user_id", "category", "max_results", "exclude_ids")
     USER_ID_FIELD_NUMBER: _ClassVar[int]
     CATEGORY_FIELD_NUMBER: _ClassVar[int]
     MAX_RESULTS_FIELD_NUMBER: _ClassVar[int]
+    EXCLUDE_IDS_FIELD_NUMBER: _ClassVar[int]
     user_id: int
     category: BookCategory
     max_results: int
-    def __init__(self, user_id: _Optional[int] = ..., category: _Optional[_Union[BookCategory, str]] = ..., max_results: _Optional[int] = ...) -> None: ...
+    exclude_ids: _containers.RepeatedScalarFieldContainer[int]
+    def __init__(self, user_id: _Optional[int] = ..., category: _Optional[_Union[BookCategory, str]] = ..., max_results: _Optional[int] = ..., exclude_ids: _Optional[_Iterable[int]] = ...) -> None: ...
 
 class BookRecommendation(_message.Message):
     __slots__ = ("id", "title")

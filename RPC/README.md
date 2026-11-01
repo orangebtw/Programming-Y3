@@ -8,6 +8,8 @@
 
 ### Выполенные задания
 1. Добавьте в Greeter метод SayGoodbye с собственными сообщениями запроса и ответа. Перегенерируйте код, реализуйте метод и вызовите его из клиента.
+
+**✅ Выполнено в коммите 7d4aa093ff28762c78f5a37722d598a6f201f028.**
 ```diff
 --- a/RPC/Protobuf/greeter_client.py
 +++ b/RPC/Protobuf/greeter_client.py
@@ -102,11 +104,13 @@ python recommendations/recommendations.py
 6. Запустите веб-приложение
 ```
 cd marketplace
-uvicorn marketplace:app --port 8000
+python -m uvicorn marketplace:app --port 8000
 ```
 
 ### Выполенные задания
 1. Добавьте в Marketplace параметр category для главной страницы.
+
+**✅ Выполнено в коммите 63f7bbd3b1bb523482f48b765b7345abea13980a.**
 ```diff
 --- a/Microservices/marketplace/marketplace.py
 +++ b/Microservices/marketplace/marketplace.py
@@ -154,6 +158,8 @@ uvicorn marketplace:app --port 8000
      </ul>
 ```
 2. Добавьте тест, проверяющий ответ 400 при ошибке INVALID_ARGUMENT от Recommendations.
+
+**✅ Выполнено в коммите 0ab977a3d25611d83c25c4eb36720d3f0bb110ae.**
 ```diff
 --- a/Microservices/marketplace/test_marketplace_integration.py
 +++ b/Microservices/marketplace/test_marketplace_integration.py
@@ -179,4 +185,92 @@ uvicorn marketplace:app --port 8000
  
  def test_api_returns_recommendations():
      url = f"{BASE_URL}/api/v1/recommendations?user_id=1&category=science_fiction&max_results=2"
+```
+3. Добавьте в RecommendationRequest поле repeated int32 exclude_ids = 4;, чтобы не рекомендовать уже прочитанные книги. Проверьте, что старый Marketplace (без перегенерации кода) продолжает работать с новым Recommendations.
+
+**✅ Выполнено в коммите fc1a1e236eb0774062f67b8bd282b5f4ab731115.**
+```diff
+--- a/RPC/Microservices/marketplace/marketplace.py
++++ b/RPC/Microservices/marketplace/marketplace.py
+ app = FastAPI(title="Marketplace", version="1.0.0", lifespan=lifespan)
+ 
+ 
+ async def fetch_recommendations(
+-    stub: RecommendationsStub, user_id: int, category: CategoryName, max_results: int
++    stub: RecommendationsStub, user_id: int, category: CategoryName, max_results: int,
++    exclude_ids: list[int] | None
+ ) -> list[BookOut]:
+     request = RecommendationRequest(
+-        user_id=user_id, category=CATEGORIES.get(category), max_results=max_results
++        user_id=user_id, category=CATEGORIES.get(category), max_results=max_results,
++        exclude_ids=exclude_ids
+     )
+     try:
+         response = await stub.Recommend(request, timeout=2.0)
+ async def get_recommendations(
+     user_id: int,
+     category: CategoryName = "mystery",
+     max_results: Annotated[int, Query(ge=1, le=10)] = 3,
++    exclude_id: Annotated[list[int] | None, Query()] = None,
+ ) -> list[BookOut]:
+     """Рекомендации книг выбранной категории."""
+     return await fetch_recommendations(
+-        request.app.state.recommendations, user_id, category, max_results
++        request.app.state.recommendations, user_id, category, max_results, exclude_ids=exclude_id
+     )
+ 
+ 
+ @app.get("/", response_class=HTMLResponse, include_in_schema=False)
+-async def homepage(request: Request, category: str = "mystery") -> str:
++async def homepage(request: Request, category: str = "mystery", exclude_id: Annotated[list[int] | None, Query()] = None) -> str:
+     books = await fetch_recommendations(
+-        request.app.state.recommendations, user_id=1, category=category, max_results=3
++        request.app.state.recommendations, user_id=1, category=category, max_results=3,
++        exclude_ids=exclude_id
+     )
+     items = "\n".join(f"      <li>{html.escape(book.title)}</li>" for book in books)
+     return f"""<!doctype html>
+--- a/RPC/Microservices/protos/recommendations.proto
++++ b/RPC/Microservices/protos/recommendations.proto
+ message RecommendationRequest {
+   int32 user_id = 1;
+   BookCategory category = 2;
+   int32 max_results = 3;
++  repeated int32 exclude_ids = 4;
+ }
+ 
+ message BookRecommendation {
+--- a/RPC/Microservices/recommendations/recommendations.py
++++ b/RPC/Microservices/recommendations/recommendations.py
+ from concurrent import futures
+ 
+ import grpc
+ import recommendations_pb2_grpc
+-from recommendations_pb2 import BookCategory, BookRecommendation, RecommendationResponse
++from recommendations_pb2 import BookCategory, BookRecommendation, RecommendationRequest, RecommendationResponse
+ 
+ BOOKS_BY_CATEGORY = {
+     BookCategory.BOOK_CATEGORY_MYSTERY: [
+ BOOKS_BY_CATEGORY = {
+ 
+ 
+ class RecommendationService(recommendations_pb2_grpc.RecommendationsServicer):
+-    def Recommend(self, request, context):
++    def Recommend(self, request: RecommendationRequest, context):
+         if request.max_results <= 0:
+             context.abort(grpc.StatusCode.INVALID_ARGUMENT, "max_results must be positive")
+         if request.category == BookCategory.BOOK_CATEGORY_UNSPECIFIED:
+ class RecommendationService(recommendations_pb2_grpc.RecommendationsServicer):
+         books = BOOKS_BY_CATEGORY.get(request.category)
+         if books is None:
+             context.abort(grpc.StatusCode.NOT_FOUND, f"Category {request.category} not found")
++            return
++        books = list(filter(lambda b: b.id not in request.exclude_ids, books))
+         num_results = min(request.max_results, len(books))
+-        return RecommendationResponse(recommendations=random.sample(books, num_results))
++        recommendations = random.sample(books, num_results)
++        return RecommendationResponse(recommendations=recommendations)
+ 
+ 
+ def create_server(port: int = 50051) -> tuple[grpc.Server, int]:
 ```
