@@ -5,7 +5,69 @@
 * Protobuf -- Знакомство с Protocol Buffers
 
 ## Protobuf
-...
+
+### Выполенные задания
+1. **Добавьте в Greeter метод SayGoodbye с собственными сообщениями запроса и ответа. Перегенерируйте код, реализуйте метод и вызовите его из клиента.**
+```diff
+--- a/RPC/Protobuf/greeter_client.py
++++ b/RPC/Protobuf/greeter_client.py
+ def run() -> None:
+         print("Greeter client received:", response.message)
+         response = stub.SayMyName(helloworld_pb2.MyNameRequest(name="Heisenberg"), timeout=5)
+         print(response.message)
++        response = stub.SayGoodbye(helloworld_pb2.GoodbyeRequest(name="my friend"), timeout=5)
++        print(response.message)
+ 
+ 
+ if __name__ == "__main__":
+--- a/RPC/Protobuf/greeter_service.py
++++ b/RPC/Protobuf/greeter_service.py
+ class Greeter(helloworld_pb2_grpc.GreeterServicer):
+             message=f"ΓÇö You're {request.name}.\nΓÇö You're goddamn right."
+         )
+ 
++    def SayGoodbye(self, request, context):
++        return helloworld_pb2.GoodbyeReply(message=f"Bye bye, {request.name} :(")
++
+ 
+ def serve(port: int = 50051) -> None:
+     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+--- a/RPC/Protobuf/protos/helloworld.proto
++++ b/RPC/Protobuf/protos/helloworld.proto
+ service Greeter {
+   rpc SayHello (HelloRequest) returns (HelloReply);
+   rpc SayHelloAgain (HelloRequest) returns (HelloReply);
+   rpc SayMyName (MyNameRequest) returns (MyNameReply);
++  rpc SayGoodbye (GoodbyeRequest) returns (GoodbyeReply);
+ }
+ 
+ message MyNameRequest {
+ 
+ message MyNameReply {
+   string message = 1;
++}
++
++message GoodbyeRequest {
++    string name = 1;
++}
++
++message GoodbyeReply {
++    string message = 1;
+ }
+\ No newline at end of file
+```
+2. Сколько байтов займёт сообщение Demo(a=300)? Проверьте ответ, вычислив его вручную по правилам varint.
+Решение:
+    1. Поле `a` -- int32 (VARINT, код 0) с индексом 1, значит `(1 << 3) | 0 = 8` -- первый байт равен `0x08`.
+    2. Число 300 в двоичном формате -- `100101100`, берём младшие 7 бит, устанавливаем самый старший бит в значение 1, получается `10101100` или `0xAC` -- это второй байт.
+    3. Смещаем оригинальное число (`300`) на семь бит вправо, получается `000000010` или `0x02` -- это третий байт.
+Проверка:
+```python
+import encoding_demo_pb2 as ed
+raw = ed.Demo(a=300).SerializeToString()
+print(f"{len(raw)} байт: {raw.hex(' ')}")
+# 3 байт: 08 ac 02
+```
 
 ## Microservices
 Простое приложение использующее gRPC и Protocol Buffers.
@@ -89,7 +151,7 @@ uvicorn marketplace:app --port 8000
  {items}
      </ul>
 ```
-2. Добавьте тест, проверяющий ответ 400 при ошибке INVALID_ARGUMENT от Recommendations.
+2. **Добавьте тест, проверяющий ответ 400 при ошибке INVALID_ARGUMENT от Recommendations.**
 ```diff
 --- a/Microservices/marketplace/test_marketplace_integration.py
 +++ b/Microservices/marketplace/test_marketplace_integration.py
