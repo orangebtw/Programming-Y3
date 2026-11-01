@@ -72,6 +72,68 @@ raw = ed.Demo(a=300).SerializeToString()
 print(f"{len(raw)} байт: {raw.hex(' ')}")
 # 3 байт: 08 ac 02
 ```
+3. Реализуйте в LibraryService клиентский поток AddBooks (stream Book) returns (Report).
+
+**✅ Выполнено в коммите [e1681c6](/../../commit/e1681c6a258dff02bb1ec4b9702a9eb33024ee64).**
+```diff
+--- a/RPC/Protobuf/library_server.py
++++ b/RPC/Protobuf/library_server.py
+ class LibraryService(library_service_pb2_grpc.LibraryServiceServicer):
+         by_genre = Counter(library_pb2.Genre.Name(book.genre) for book in self._books.values())
+         return library_service_pb2.Report(total_books=len(self._books), books_by_genre=by_genre)
+ 
++    def AddBooks(self, request_iterator, context):
++        for book in request_iterator:
++            if book.id in self._books:
++                continue
++            if book.id <= 0:
++                continue
++            self._books[book.id] = book
++        by_genre = Counter(library_pb2.Genre.Name(book.genre) for book in self._books.values())
++        return library_service_pb2.Report(total_books=len(self._books), books_by_genre=by_genre)
++
+ 
+ def serve(port: int = 50052) -> grpc.Server:
+     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+--- a/RPC/Protobuf/library_service_test.py
++++ b/RPC/Protobuf/library_service_test.py
+ for title, metadata, work_seconds, timeout in scenarios:
+         result = f"OK: {report.total_books} книги, {dict(report.books_by_genre)}"
+     except grpc.RpcError as error:
+         result = f"{error.code().name} — {error.details()}"
+-    print(f"{title:<18} {time.monotonic() - started:4.1f} с  {result}")
++    print(f"{title:<18} {time.monotonic() - started:4.1f} с  {result}")
++
++# Клиентский поток
++def generate_books():
++    books_to_send = (
++        library_pb2.Book(id=5, title="qwe", authors=(library_pb2.Author(name="Asd", birth_year=2015),)),
++        library_pb2.Book(id=6, title="rwetre", authors=(library_pb2.Author(name="yrty345", birth_year=2020),)),
++        library_pb2.Book(id=7, title="aaaaa", authors=(library_pb2.Author(name="qqqqq", birth_year=2016),)),
++    )
++    for book in books_to_send:
++        time.sleep(0.5)
++        yield book
++
++
++try:
++    report = library_stub.AddBooks(generate_books())
++    result = f"OK: {report.total_books} книги, {dict(report.books_by_genre)}"
++except grpc.RpcError as error:
++    result = f"{error.code().name} — {error.details()}"
++print(result)
+--- a/RPC/Protobuf/protos/library/v1/library_service.proto
++++ b/RPC/Protobuf/protos/library/v1/library_service.proto
+ service LibraryService {
+   rpc ListBooks (ListBooksRequest) returns (stream Book);
+   // Долгая операция, доступная только с токеном
+   rpc BuildReport (BuildReportRequest) returns (Report);
++  // Клиентский поток
++  rpc AddBooks (stream Book) returns (Report);
+ }
+ 
+ message GetBookRequest {
+```
 
 ## Microservices
 Простое приложение использующее gRPC и Protocol Buffers.
