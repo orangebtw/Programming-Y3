@@ -1,7 +1,7 @@
 """Интеграционные тесты: нужны запущенные Marketplace и Recommendations."""
 import json
 import os
-from urllib.request import urlopen
+from urllib.request import urlopen, HTTPError
 
 BASE_URL = os.getenv("MARKETPLACE_URL", "http://localhost:8000")
 
@@ -12,6 +12,12 @@ def test_homepage_renders_three_books():
     assert "<title>Online Books For You</title>" in page
     assert page.count("<li>") == 3
 
+def test_homepage_returns_400_on_invalid_argument():
+    try:
+        urlopen(f"{BASE_URL}?category=unknown_category", timeout=5)
+        raise RuntimeError("HTTPError was not raised!")
+    except HTTPError as e:
+        assert e.status == 400
 
 def test_api_returns_recommendations():
     url = f"{BASE_URL}/api/v1/recommendations?user_id=1&category=science_fiction&max_results=2"
